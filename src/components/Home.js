@@ -1,11 +1,16 @@
+
+
 import styled from "styled-components";
 import Leftside from "./Leftside";
 import Main from "./Mainside";
 import Rightside from "./Rightside";
+import { Navigate } from "react-router-dom";
+import { connect } from "react-redux";
 
 const Home = (props) => {
   return (
     <Container>
+      {!props.user && <Navigate to="/" />}
       <Section>
         <h5>
           <a>Hiring in a hurry? - </a>
@@ -50,13 +55,11 @@ const Section = styled.section`
       font-weight: 700;
     }
   }
-
   p {
     font-size: 14px;
     color: #434649;
     font-weight: 600;
   }
-
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 0 5px;
@@ -78,4 +81,11 @@ const Layout = styled.div`
   }
 `;
 
-export default Home;
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+
+export default connect(mapStateToProps)(Home);
