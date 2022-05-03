@@ -4,19 +4,18 @@ import Header from "./components/Header";
 import { BrowserRouter as Router, Routes, Link, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import {getUserAuth} from './actions'
+import { getUserAuth } from './actions'
 import { connect } from "react-redux";
 function App(props) {
 	useEffect(() => {
-		props.getUserAuth(); 
-	}, []); 
+		props.getUserAuth();
+	}, []);
 	return (
 		<div className="App">
 			<Router>
-				<Header />
 				<Routes>
 					<Route exact path="/" element={<Login />} />
-					<Route path="/home" element={<Home />} />
+					<Route path="/home" element={[<Header />, <Home />]} />
 				</Routes>
 			</Router>
 		</div>
@@ -24,11 +23,11 @@ function App(props) {
 }
 
 const mapStateToProps = (state) => {
-	return {}; 
+	return {};
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	getUserAuth: () => dispatch(getUserAuth()) 
+	getUserAuth: () => dispatch(getUserAuth())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);  
