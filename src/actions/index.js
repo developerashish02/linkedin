@@ -66,7 +66,7 @@ export function postArticleAPI(payload) {
 						actor: {
 							description: payload.user.email,
 							title: payload.user.displayName,
-							date: payload.timestamp,
+							data: payload.timestamp,
 							image: payload.user.photoURL,
 						},
 						video: payload.video,

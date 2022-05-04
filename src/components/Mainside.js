@@ -1,13 +1,56 @@
 import React from "react";
 import styled from "styled-components";
-import { InsertPhotoIcon, MusicVideoIcon, EventIcon, ArticleIcon, ThumbUpIcon, MoreHorizIcon, CommentIcon, ShareIcon, SendIcon } from './Icon'; 
-const Mainside = () => {
+import {
+	InsertPhotoIcon,
+	MusicVideoIcon,
+	EventIcon,
+	ArticleIcon,
+	ThumbUpIcon,
+	MoreHorizIcon,
+	CommentIcon,
+	ShareIcon,
+	SendIcon,
+} from "./Icon";
+import PostModal from "./PostModal";
+import { useState } from "react";
+import { connect } from "react-redux";
+const Mainside = (props) => {
+	const [showModal, setShowModal] = useState("close");
+
+	const handleClick = (e) => {
+		e.preventDefault();
+
+		if (e.target !== e.currentTarget) {
+			return;
+		}
+
+		switch (showModal) {
+			case "open":
+				setShowModal("close");
+				break;
+
+			case "close":
+				setShowModal("open");
+				break;
+
+			default:
+				setShowModal("close");
+				break;
+		}
+	};
 	return (
 		<Container>
 			<ShareBox>
 				<div>
-					<img src="/images/man.png" alt="" />
-					<button>Write a comments</button>
+					{props.user && props.user.photoURL ? (
+						<img src={props.user.photoURL} />
+					) : (
+						<img src="/images/user.svg" />
+					)}
+					{/* <img src="/images/man.png" alt="" /> */}
+					<button onClick={handleClick} disabled={props.loading ? true : false}>
+						Start a posts
+					</button>
 				</div>
 
 				<div>
@@ -32,7 +75,8 @@ const Mainside = () => {
 					</button>
 				</div>
 			</ShareBox>
-			<div>
+			<Content>
+				{props.loading && <img src="\images\Spinner-1s-200px.svg" />}
 				<Article>
 					<SharedActor>
 						<a>
@@ -91,7 +135,8 @@ const Mainside = () => {
 						</button>
 					</SocialActions>
 				</Article>
-			</div>
+			</Content>
+			<PostModal showModal={showModal} handleClick={handleClick} />
 		</Container>
 	);
 };
@@ -293,4 +338,14 @@ const Content = styled.div`
 	}
 `;
 
-export default Mainside;
+
+const mapStateToProps = (state) => {
+	return {
+		loading: state.articalState.loading,
+		user: state.userState.user,
+	}
+}
+
+const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Mainside);  
