@@ -7,7 +7,7 @@ import ReactPlayer from "react-player";
 import { useState } from "react";
 import { connect } from "react-redux";
 import { postArticleAPI } from "../actions";
-import Firebase from 'firebase/compat/app';
+import Firebase from "firebase/compat/app";
 
 function PostalModal(props) {
 	const [editorText, setEditorText] = useState("");

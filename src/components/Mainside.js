@@ -12,10 +12,16 @@ import {
 	SendIcon,
 } from "./Icon";
 import PostModal from "./PostModal";
-import { useState } from "react";
 import { connect } from "react-redux";
+import { getArticlesAPI } from "../actions";
+import { useState, useEffect } from "react";
+import ReactPlayer from "react-player/lazy";
 const Mainside = (props) => {
 	const [showModal, setShowModal] = useState("close");
+
+	useEffect(() => {
+		props.getArticles();
+	}, []);
 
 	const handleClick = (e) => {
 		e.preventDefault();
@@ -77,64 +83,79 @@ const Mainside = (props) => {
 			</ShareBox>
 			<Content>
 				{props.loading && <img src="\images\Spinner-1s-200px.svg" />}
-				<Article>
-					<SharedActor>
-						<a>
-							<img src="/images/user.svg" alt="" />
-							<div>
-								<span>Title</span>
-								<span>Info</span>
-								<span>Date</span>
-							</div>
-						</a>
+				{props.articles.length > 0 &&
+					props.articles.map((article, key) => (
+						<Article key={key}>
+							<SharedActor>
+								<a>
+									{article.actor.image ? (
+										<img src={article.actor.image} alt="" />
+									) : (
+										<img src="/images/user.svg" alt="" />
+									)}
+									<div>
+										<span>{article.actor.title}</span>
+										<span>{article.actor.description}</span>
+										<span>
+											{article.actor.date.toDate().toLocaleDateString()}
+										</span>
+									</div>
+								</a>
 
-						<button>
-							<MoreHorizIcon />
-						</button>
-					</SharedActor>
+								<button>
+									<MoreHorizIcon />
+								</button>
+							</SharedActor>
 
-					<Description>Description</Description>
+							<Description>{article.description}</Description>
 
-					<SharedImage>
-						<a>
-							<img src="\images\oppo-IQ9mk2b-3yY-unsplash.jpg" />
-						</a>
-					</SharedImage>
+							<SharedImage>
+								<a>
+									{!article.sharedImg && article.video ? (
+										<div>
+											<ReactPlayer width={"100%"} url={article.video} />
+										</div>
+									) : (
+										article.sharedImg && <img src={article.sharedImg} alt="" />
+									)}
+								</a>
+							</SharedImage>
 
-					<SocialCount>
-						<li>
-							<button>
-								<img
-									src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb"
-									alt=""
-								/>
-								<span>75</span>
-							</button>
-						</li>
-						<li>
-							<a>comments </a>
-						</li>
-					</SocialCount>
+							<SocialCount>
+								<li>
+									<button>
+										<img
+											src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb"
+											alt=""
+										/>
+										<span>{}</span>
+									</button>
+								</li>
+								<li>
+									<a>{article.comments}</a>
+								</li>
+							</SocialCount>
 
-					<SocialActions>
-						<button>
-							<ThumbUpIcon />
-							<span>Like</span>
-						</button>
-						<button>
-							<CommentIcon />
-							<span>Comment</span>
-						</button>
-						<button>
-							<ShareIcon />
-							<span>Share</span>
-						</button>
-						<button>
-							<SendIcon />
-							<span>Send</span>
-						</button>
-					</SocialActions>
-				</Article>
+							<SocialActions>
+								<button>
+									<ThumbUpIcon />
+									<span>Like</span>
+								</button>
+								<button>
+									<CommentIcon />
+									<span>Comment</span>
+								</button>
+								<button>
+									<ShareIcon />
+									<span>Share</span>
+								</button>
+								<button>
+									<SendIcon />
+									<span>Send</span>
+								</button>
+							</SocialActions>
+						</Article>
+					))}
 			</Content>
 			<PostModal showModal={showModal} handleClick={handleClick} />
 		</Container>
@@ -338,14 +359,16 @@ const Content = styled.div`
 	}
 `;
 
-
 const mapStateToProps = (state) => {
 	return {
 		loading: state.articalState.loading,
 		user: state.userState.user,
-	}
-}
+		articles: state.articalState.articles,
+	};
+};
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+	getArticles: () => dispatch(getArticlesAPI()),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Mainside);  
+export default connect(mapStateToProps, mapDispatchToProps)(Mainside);
