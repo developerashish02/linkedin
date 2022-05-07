@@ -4,7 +4,7 @@ Built using React JS, Redux, Firebase & Styled-Components within a week. My firs
 ## Deployment
 The Linkdine-clone Deployment on firebase 
 
-https://textutils-704cc.web.app
+https://linkedin-clone-58e98.web.app/home
 
 ## Features
 
